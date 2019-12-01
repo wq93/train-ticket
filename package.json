@@ -73,18 +73,7 @@
     "extends": [
       "eslint:recommended",
       "react-app"
-    ],
-    "rules": {
-      "react/jsx-indent": [
-        "error",
-        4
-      ]
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    ]
   },
   "browserslist": [
     ">0.2%",
