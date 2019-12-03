@@ -39,3 +39,16 @@ export default function Journey(props) {
     </div>
   );
 }
+
+/**
+ * @prop from 出发地
+ * @prop to 目的地
+ * @prop exchangeFromTo 互换出发地/目的地
+ * @prop showCitySelector 显示城市选择框的方法
+ **/
+Journey.propTypes = {
+  from: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+  exchangeFromTo: PropTypes.func.isRequired,
+  showCitySelector: PropTypes.func.isRequired,
+}
