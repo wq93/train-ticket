@@ -40,6 +40,7 @@ export function setCityData(cityDate) {
 }
 
 export function toggleHighSpeed() {
+  // 异步action
   return (dispatch, getState) => {
     const { highSpeed } = getState();
     dispatch({
