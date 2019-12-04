@@ -1,16 +1,92 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, memo  } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import './CitySelector.css';
 
-export default function CitySelector(props) {
+// 每条城市数据
+const CityItem = memo(function (props) {
+  const {
+    name,
+    onSelect
+  } = props;
+
+  return (
+    <li className='city-li' onClick={ () => onSelect(name) }>
+      { name }
+    </li>
+  );
+});
+
+CityItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
+
+// 以首字母分组的城市集合
+const CitySection = memo(function (props) {
+  const { title, cities = [], onSelect } = props;
+
+  return (
+    <ul className="city-ul">
+      <li className="city-li" key="title" data-cate={title}>
+        {title}
+      </li>
+      {cities.map(city => {
+        return (
+          <CityItem
+            key={city.name}
+            name={city.name}
+            onSelect={onSelect}
+          />
+        );
+      })}
+    </ul>
+  );
+});
+
+CitySection.propTypes = {
+  title: PropTypes.string.isRequired,
+  cities: PropTypes.array,
+  onSelect: PropTypes.func.isRequired,
+};
+
+// 城市总列表
+const CityList = memo(function (props) {
+  const { sections, onSelect } = props;
+
+  return (
+    <div className="city-list">
+      <div className="city-cate">
+        {sections.map(section => {
+          return (
+            <CitySection
+              key={section.title}
+              title={section.title}
+              cities={section.citys}
+              onSelect={onSelect}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+});
+
+CityList.propTypes = {
+  sections: PropTypes.array.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  toAlpha: PropTypes.func.isRequired,
+};
+
+const CitySelector = memo(function (props) {
   const {
     show,
     cityData,
     isLoading,
     onBack,
-    fetchCityData
+    fetchCityData,
+    onSelect
   } = props;
 
   const [searchKey, setSearchKey] = useState('');
@@ -21,6 +97,21 @@ export default function CitySelector(props) {
     if(!show || cityData || isLoading) return;
     fetchCityData();
   }, [ show, cityData, isLoading ])
+
+  // 展示城市数据
+  const outputCitySections = () => {
+    if(isLoading) {
+      return <div>Loading...</div>
+    }
+    if(cityData) {
+      return (
+        <CityList
+          sections={ cityData.cityList }
+          onSelect={ onSelect }
+        />
+      )
+    }
+  }
 
   return (
     <div
@@ -53,9 +144,12 @@ export default function CitySelector(props) {
           &#xf063;
         </i>
       </div>
+      { outputCitySections() }
     </div>
   );
-}
+});
+
+export default CitySelector;
 
 /**
  * @prop show 显示城市选择框
@@ -63,6 +157,7 @@ export default function CitySelector(props) {
  * @prop isLoading 是否在加载
  * @prop onBack 返回上一页函数
  * @prop fetchCityData 获取城市数据方法
+ * @prop setSelectedCity 设置选择的城市
  **/
 CitySelector.propTypes = {
   show: PropTypes.bool.isRequired,
@@ -70,4 +165,5 @@ CitySelector.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   onBack: PropTypes.func.isRequired,
   fetchCityData: PropTypes.func.isRequired,
+  setSelectedCity: PropTypes.func.isRequired,
 }

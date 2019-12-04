@@ -16,6 +16,7 @@ import {
   showCitySelector,
   hideCitySelector,
   fetchCityData,
+  setSelectedCity,
 } from './actions.js';
 
 function App(props) {
@@ -24,6 +25,8 @@ function App(props) {
     from,
     to,
     isCitySelectorVisible,
+    cityData,
+    isLoadingCityData,
     dispatch
   } = props;
 
@@ -46,7 +49,8 @@ function App(props) {
     return bindActionCreators(
       {
         onBack: hideCitySelector,
-        fetchCityData
+        onSelect: setSelectedCity,
+        fetchCityData,
       },
       dispatch
     )
@@ -62,8 +66,11 @@ function App(props) {
           { ...cbs }></Journey>
       </div>
       <CitySelector
-        show={ isCitySelectorVisible }
-        { ...citySelectorCbs }></CitySelector>
+        show={isCitySelectorVisible}
+        cityData={cityData}
+        isLoading={isLoadingCityData}
+        {...citySelectorCbs}
+      />
     </div>
   );
 }
