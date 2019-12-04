@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useEffect, memo  } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  memo,
+  useCallback
+} from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -53,8 +59,10 @@ CitySection.propTypes = {
 
 // 城市总列表
 const CityList = memo(function (props) {
-  const { sections, onSelect } = props;
-
+  const { sections, onSelect, toAlpha } = props;
+  const alphabet = Array.from(new Array(26), (ele, index) => {
+    return String.fromCharCode(65 + index);
+  });
   return (
     <div className="city-list">
       <div className="city-cate">
@@ -69,6 +77,17 @@ const CityList = memo(function (props) {
           );
         })}
       </div>
+      <div className="city-index">
+        {alphabet.map(alpha => {
+          return (
+            <AlphaIndex
+              key={alpha}
+              alpha={alpha}
+              onClick={toAlpha}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 });
@@ -77,6 +96,21 @@ CityList.propTypes = {
   sections: PropTypes.array.isRequired,
   onSelect: PropTypes.func.isRequired,
   toAlpha: PropTypes.func.isRequired,
+};
+
+// 首字母导航列表
+const AlphaIndex = memo(function (props) {
+  const { alpha, onClick } = props;
+  return (
+    <i className="city-index-item" onClick={() => onClick(alpha)}>
+      {alpha}
+    </i>
+  );
+})
+
+AlphaIndex.propTypes = {
+  alpha: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 const CitySelector = memo(function (props) {
@@ -98,6 +132,11 @@ const CitySelector = memo(function (props) {
     fetchCityData();
   }, [ show, cityData, isLoading ])
 
+  // 点击定位到首字母类别
+  const toAlpha = useCallback(alpha => {
+    document.querySelector(`[data-cate='${alpha}']`).scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
   // 展示城市数据
   const outputCitySections = () => {
     if(isLoading) {
@@ -108,6 +147,7 @@ const CitySelector = memo(function (props) {
         <CityList
           sections={ cityData.cityList }
           onSelect={ onSelect }
+          toAlpha={ toAlpha }
         />
       )
     }
