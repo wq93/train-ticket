@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -9,12 +9,18 @@ export default function CitySelector(props) {
     show,
     cityData,
     isLoading,
-    onBack
+    onBack,
+    fetchCityData
   } = props;
 
   const [searchKey, setSearchKey] = useState('');
 
   const key = useMemo(() => searchKey.trim(), [searchKey]);
+
+  useEffect(() => {
+    if(!show || cityData || isLoading) return;
+    fetchCityData();
+  }, [ show, cityData, isLoading ])
 
   return (
     <div
@@ -56,10 +62,12 @@ export default function CitySelector(props) {
  * @prop cityData 城市数据
  * @prop isLoading 是否在加载
  * @prop onBack 返回上一页函数
+ * @prop fetchCityData 获取城市数据方法
  **/
 CitySelector.propTypes = {
   show: PropTypes.bool.isRequired,
   cityData: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   onBack: PropTypes.func.isRequired,
+  fetchCityData: PropTypes.func.isRequired,
 }
