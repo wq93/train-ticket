@@ -1,3 +1,4 @@
+// 获取当天0点的时间戳
 export function h0(timestamp = Date.now()) {
     const target = new Date(timestamp);
 
