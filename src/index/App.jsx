@@ -20,7 +20,8 @@ import {
   setSelectedCity,
   showDateSelector,
   setDepartDate,
-  hideDateSelector
+  hideDateSelector,
+  toggleHighSpeed
 } from './actions.js';
 
 function App(props) {
@@ -33,6 +34,7 @@ function App(props) {
     cityData,
     isLoadingCityData,
     departDate,
+    highSpeed,
     dispatch
   } = props;
 
@@ -89,6 +91,15 @@ function App(props) {
     dispatch(setDepartDate(day));
     dispatch(hideDateSelector());
   })
+  // 切换高铁/动车
+  const highSpeedCbs = useMemo(() => {
+    return bindActionCreators(
+      {
+        toggle: toggleHighSpeed,
+      },
+      dispatch
+    );
+  }, []);
 
   return (
     <div>
@@ -99,6 +110,10 @@ function App(props) {
           to={ to }
           { ...cbs }/>
         <DepartDate time={departDate} {...departDateCbs} />
+        <HighSpeed
+          highSpeed={highSpeed}
+          { ...highSpeedCbs }
+        />
       </div>
       <CitySelector
         show={isCitySelectorVisible}
