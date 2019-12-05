@@ -8,6 +8,53 @@ import getLastThreeMonth from '../util/getLastThreeMonth';
 
 import './DateSelector.css';
 
+function Day(props) {
+  const { day, onSelect } = props;
+  if(!day) return <td className='null' />;
+  const classes = [];
+  const now = h0();
+  // 如果日期比当前0点的时间戳小
+  if(day < now) classes.push('disabled');
+
+  // 判断是否是周末
+  if([6, 0].includes(new Date(day).getDay())) {
+    classes.push('weekend');
+  }
+
+  // 判断是否是今天
+  const dateString = now === day ? '今天' : new Date(day).getDate();
+
+  return (
+    <td className={classnames(classes)} onClick={() => onSelect(day)}>
+      {dateString}
+    </td>
+  )
+}
+
+Day.propTypes = {
+  day: PropTypes.number,
+  onSelect: PropTypes.func.isRequired,
+};
+
+function Week(props) {
+  const { days, onSelect } = props;
+  return (
+    <tr className="date-table-days">
+      {days.map((day, idx) => {
+        return <Day key={idx} day={day} onSelect={onSelect} />;
+      })}
+    </tr>
+  );
+}
+
+/*
+* @props days 每周的时间戳集合
+* @props onSelect 点击当前时间的选择方法
+* */
+Week.propTypes = {
+  days: PropTypes.array.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
 function Month(props) {
   const { startingTimeInMonth, onSelect } = props;
 
@@ -16,8 +63,9 @@ function Month(props) {
 
   let days = [];
 
+  // 如果currentDay月份还是本月, 则添加到days数组中, 再日期+1, 直到两个变量的月份不再相等
   while (currentDay.getMonth() === startDay.getMonth()) {
-    days.push(currentDay.getTime());
+    days.push(currentDay.getTime()); // 保存时间戳
     currentDay.setDate(currentDay.getDate() + 1);
   }
   // 计算本月第一天是星期几, 补齐空白
@@ -29,7 +77,7 @@ function Month(props) {
   const lastDay = new Date(days[ days.length - 1 ]);
   days = days.concat(
     new Array(lastDay.getDay() ? 7 - lastDay.getDay() : 0)
-      .fill(null)
+     .fill(null)
   );
 
   const weeks = [];
@@ -61,7 +109,9 @@ function Month(props) {
         <th className="weekend">周六</th>
         <th className="weekend">周日</th>
       </tr>
-
+      {weeks.map((week, idx) => {
+        return <Week key={idx} days={week} onSelect={onSelect} />;
+      })}
       </tbody>
     </table>
   );

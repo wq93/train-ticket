@@ -11,7 +11,7 @@ import Submit from './Submit.jsx';
 
 import CitySelector from '../common/CitySelector';
 import DateSelector from '../common/DateSelector';
-
+import { h0 } from '../common/fp';
 import {
   exchangeFromTo,
   showCitySelector,
@@ -19,6 +19,7 @@ import {
   fetchCityData,
   setSelectedCity,
   showDateSelector,
+  setDepartDate,
   hideDateSelector
 } from './actions.js';
 
@@ -71,7 +72,7 @@ function App(props) {
     );
   }, []);
 
-  // 选择出发日期浮层
+  // 显示出发日期浮层
   const dateSelectorCbs = useMemo(() => {
     return bindActionCreators(
       {
@@ -80,6 +81,14 @@ function App(props) {
       dispatch
     );
   }, []);
+
+  // 选择出发日期
+  const onSelectDate = useCallback(day => {
+    if(!day || day < h0() ) return;
+
+    dispatch(setDepartDate(day));
+    dispatch(hideDateSelector());
+  })
 
   return (
     <div>
@@ -100,6 +109,7 @@ function App(props) {
       <DateSelector
         show={isDateSelectorVisible}
         { ...dateSelectorCbs }
+        onSelect={ onSelectDate }
       />
     </div>
   );
