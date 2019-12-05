@@ -105,6 +105,8 @@ function App(props) {
     <div>
       <div className="header-wrapper">
         <Header title="火车票" onBack={onBack} />
+      </div>
+      <form action="./query.html" className="form">
         <Journey
           from={ from }
           to={ to }
@@ -114,7 +116,8 @@ function App(props) {
           highSpeed={highSpeed}
           { ...highSpeedCbs }
         />
-      </div>
+        <Submit />
+      </form>
       <CitySelector
         show={isCitySelectorVisible}
         cityData={cityData}
