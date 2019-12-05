@@ -10,6 +10,7 @@ import Journey from './Journey.jsx';
 import Submit from './Submit.jsx';
 
 import CitySelector from '../common/CitySelector';
+import DateSelector from '../common/DateSelector';
 
 import {
   exchangeFromTo,
@@ -17,7 +18,8 @@ import {
   hideCitySelector,
   fetchCityData,
   setSelectedCity,
-  showDateSelector
+  showDateSelector,
+  hideDateSelector
 } from './actions.js';
 
 function App(props) {
@@ -26,6 +28,7 @@ function App(props) {
     from,
     to,
     isCitySelectorVisible,
+    isDateSelectorVisible,
     cityData,
     isLoadingCityData,
     departDate,
@@ -58,11 +61,21 @@ function App(props) {
     )
   }, []);
 
-  // 选择出发日期
+  // 出发日期显示
   const departDateCbs = useMemo(() => {
     return bindActionCreators(
       {
         onClick: showDateSelector,
+      },
+      dispatch
+    );
+  }, []);
+
+  // 选择出发日期浮层
+  const dateSelectorCbs = useMemo(() => {
+    return bindActionCreators(
+      {
+        onBack: hideDateSelector,
       },
       dispatch
     );
@@ -83,6 +96,10 @@ function App(props) {
         cityData={cityData}
         isLoading={isLoadingCityData}
         {...citySelectorCbs}
+      />
+      <DateSelector
+        show={isDateSelectorVisible}
+        { ...dateSelectorCbs }
       />
     </div>
   );
