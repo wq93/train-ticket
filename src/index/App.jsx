@@ -17,6 +17,7 @@ import {
   hideCitySelector,
   fetchCityData,
   setSelectedCity,
+  showDateSelector
 } from './actions.js';
 
 function App(props) {
@@ -27,6 +28,7 @@ function App(props) {
     isCitySelectorVisible,
     cityData,
     isLoadingCityData,
+    departDate,
     dispatch
   } = props;
 
@@ -56,6 +58,16 @@ function App(props) {
     )
   }, []);
 
+  // 选择出发日期
+  const departDateCbs = useMemo(() => {
+    return bindActionCreators(
+      {
+        onClick: showDateSelector,
+      },
+      dispatch
+    );
+  }, []);
+
   return (
     <div>
       <div className="header-wrapper">
@@ -63,7 +75,8 @@ function App(props) {
         <Journey
           from={ from }
           to={ to }
-          { ...cbs }></Journey>
+          { ...cbs }/>
+        <DepartDate time={departDate} {...departDateCbs} />
       </div>
       <CitySelector
         show={isCitySelectorVisible}
