@@ -2,6 +2,7 @@ import { ORDER_DURATION, ORDER_DEPART } from './constant';
 
 import { h0 } from '../common/fp';
 
+// 定义action_type
 export const ACTION_SET_FROM = 'SET_FROM';
 export const ACTION_SET_TO = 'SET_TO';
 export const ACTION_SET_DEPART_DATE = 'SET_DEPART_DATE';
@@ -62,7 +63,9 @@ export function setTrainList(trainList) {
         payload: trainList,
     };
 }
+// 异步切换state值
 export function toggleOrderType() {
+    // 返回一个带有dispatch, getState的函数
     return (dispatch, getState) => {
         const { orderType } = getState();
         if (orderType === ORDER_DEPART) {

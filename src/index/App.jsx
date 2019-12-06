@@ -114,7 +114,7 @@ function App(props) {
         <DepartDate time={departDate} {...departDateCbs} />
         <HighSpeed
           highSpeed={highSpeed}
-          { ...highSpeedCbs }
+          { ...highSpeedCbs } 
         />
         <Submit />
       </form>
