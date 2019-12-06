@@ -25,6 +25,7 @@ import { ORDER_DEPART } from './constant';
 
 export default {
     from(state = null, action) {
+        // 获取type和payload
         const { type, payload } = action;
         switch (type) {
             case ACTION_SET_FROM:

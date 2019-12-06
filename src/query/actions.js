@@ -81,6 +81,7 @@ export function toggleOrderType() {
         }
     };
 }
+// 切换只看有票的筛选项
 export function toggleOnlyTickets() {
     return (dispatch, getState) => {
         const { onlyTickets } = getState();
@@ -180,6 +181,7 @@ export function setSearchParsed(searchParsed) {
     };
 }
 
+// 切换到后一天
 export function nextDate() {
     return (dispatch, getState) => {
         const { departDate } = getState();
@@ -187,6 +189,8 @@ export function nextDate() {
         dispatch(setDepartDate(h0(departDate) + 86400 * 1000));
     };
 }
+
+// 切换到前一天
 export function prevDate() {
     return (dispatch, getState) => {
         const { departDate } = getState();
