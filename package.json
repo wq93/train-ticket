@@ -135,5 +135,6 @@
     "lint-staged": "^8.2.1",
     "prettier": "^1.18.2",
     "webpack-bundle-analyzer": "^3.3.2"
-  }
+  },
+  "homepage": "https://wq93.github.io/train-ticket"
 }
