@@ -4,9 +4,10 @@ import URI from 'urijs';
 import dayjs from 'dayjs';
 
 import Header from '../common/Header';
+import Nav from '../common/Nav';
 
 import { h0 } from '../common/fp';
-
+import useNav from '../common/useNav';
 import './App.css';
 
 import {
@@ -19,7 +20,9 @@ import {
   setTicketTypes,
   setTrainTypes,
   setDepartStations,
-  setArriveStations
+  setArriveStations,
+  prevDate,
+  nextDate,
 } from './actions';
 
 function App(props) {
@@ -146,10 +149,24 @@ function App(props) {
     window.history.back();
   }, [])
 
+  const { isPrevDisabled, isNextDisabled, prev, next } = useNav(
+    departDate,
+    dispatch,
+    prevDate,
+    nextDate
+  );
+
   return (
     <div>
       <div className="header-wrapper">
         <Header title={`${from} ⇀ ${to}`} onBack={onBack} />
+        <Nav
+          date={departDate}
+          isPrevDisabled={isPrevDisabled}
+          isNextDisabled={isNextDisabled}
+          prev={prev}
+          next={next}
+        />
       </div>
     </div>
   );
