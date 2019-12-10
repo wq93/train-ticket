@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import URI from 'urijs';
 import dayjs from 'dayjs';
 
+import List from './List';
 import Header from '../common/Header';
 import Nav from '../common/Nav';
 
@@ -167,6 +168,7 @@ function App(props) {
           prev={prev}
           next={next}
         />
+        <List list={ trainList }/>
       </div>
     </div>
   );

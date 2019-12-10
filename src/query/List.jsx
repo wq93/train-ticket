@@ -16,6 +16,7 @@ const ListItem = memo(function ListItem(props) {
         dayAfter,
     } = props;
 
+    // 点击的跳转链接
     const url = useMemo(() => {
         return new URI('ticket.html')
             .setSearch('aStation', aStation)
