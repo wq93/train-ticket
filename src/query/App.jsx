@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import URI from 'urijs';
 import dayjs from 'dayjs';
 
 import List from './List';
+import Bottom from './Bottom';
 import Header from '../common/Header';
 import Nav from '../common/Nav';
 
@@ -24,6 +26,11 @@ import {
   setArriveStations,
   prevDate,
   nextDate,
+
+  toggleOrderType,
+  toggleHighSpeed,
+  toggleOnlyTickets,
+  toggleIsFiltersVisible,
 } from './actions';
 
 function App(props) {
@@ -146,6 +153,7 @@ function App(props) {
     arriveTimeEnd
   ])
 
+  // 头部返回的回调函数
   const onBack = useCallback(() => {
     window.history.back();
   }, [])
@@ -156,6 +164,19 @@ function App(props) {
     prevDate,
     nextDate
   );
+
+  // 底部筛选框的按钮
+  const bottomCbs = useMemo(() => {
+    return bindActionCreators(
+      {
+        toggleOrderType,
+        toggleHighSpeed,
+        toggleOnlyTickets,
+        toggleIsFiltersVisible,
+      },
+      dispatch
+    );
+  }, []);
 
   return (
     <div>
@@ -169,6 +190,13 @@ function App(props) {
           next={next}
         />
         <List list={ trainList }/>
+        <Bottom
+          highSpeed={highSpeed}
+          orderType={orderType}
+          onlyTickets={onlyTickets}
+          isFiltersVisible={isFiltersVisible}
+          {...bottomCbs}
+        />
       </div>
     </div>
   );
