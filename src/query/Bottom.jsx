@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
@@ -7,12 +7,12 @@ import './Bottom.css';
 
 // 筛选类别的每一项
 const Filter = memo(function Filter(props) {
-  const { name, checked, value, dispatch } = props;
+  const { name, checked, value, toggle } = props;
 
   return (
     <li
       className={classnames({ checked })}
-      onClick={() => dispatch({ payload: value, type: 'toggle' })}
+      onClick={() => toggle(value)}
     >
       {name}
     </li>
@@ -29,7 +29,18 @@ Filter.propTypes = {
 
 // 筛选类别
 const Option = memo(function Option(props) {
-  const { title, options, checkedMap, dispatch } = props;
+  const { title, options, checkedMap, update } = props;
+
+  const toggle = useCallback((value) => {
+    const newCheckedMap = {...checkedMap};
+    if(value in checkedMap) {
+      delete newCheckedMap[value];
+    }else{
+      newCheckedMap[value] = value;
+    }
+    // 更新checkedMap值
+    update(newCheckedMap)
+  }, [checkedMap, update]);
 
   return (
     <div className="option">
@@ -41,7 +52,7 @@ const Option = memo(function Option(props) {
               key={option.value}
               {...option}
               checked={option.value in checkedMap}
-              dispatch={dispatch}
+              toggle={toggle}
             />
           );
         })}
@@ -76,26 +87,44 @@ const BottomModal = memo(function (props) {
     toggleIsFiltersVisible,
   } = props;
 
+  // useState传入函数 只有第一次渲染时才会被执行
+  const [localCheckedTicketTypes, setLocalCheckedTicketTypes] = useState(() => {
+    return {...checkedTicketTypes};
+  });
+  const [localCheckedTrainTypes, setLocalCheckedTrainTypes] = useState(() => {
+    return {...checkedTrainTypes};
+  });
+  const [localCheckedDepartStations, setLocalCheckedDepartStations] = useState(() => {
+    return {...checkedDepartStations};
+  });
+  const [localCheckedArriveStations, setLocalCheckedArriveStations] = useState(() => {
+    return {...checkedArriveStations};
+  });
+
   const optionGroup = [
     {
       title: '坐席类型',
       options: ticketTypes,
-      checkedMap: checkedTicketTypes,
+      checkedMap: localCheckedTicketTypes,
+      update: setLocalCheckedTicketTypes,
     },
     {
       title: '车次类型',
       options: trainTypes,
-      checkedMap: checkedTrainTypes,
+      checkedMap: localCheckedTrainTypes,
+      update: setLocalCheckedTrainTypes,
     },
     {
       title: '出发车站',
       options: departStations,
-      checkedMap: checkedDepartStations,
+      checkedMap: localCheckedDepartStations,
+      update: setLocalCheckedDepartStations,
     },
     {
       title: '到达车站',
       options: arriveStations,
-      checkedMap: checkedArriveStations,
+      checkedMap: localCheckedArriveStations,
+      update: setLocalCheckedArriveStations,
     },
   ];
 
